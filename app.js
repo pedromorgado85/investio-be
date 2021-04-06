@@ -39,6 +39,8 @@ app.use(
 );
 
 // ROUTES MIDDLEWARE STARTS HERE:
+const stocksRoutes = require('./routes/markets/stocks-routes');
+app.use('/api', stocksRoutes);
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
 const assetRoutes = require('./routes/asset-route');
