@@ -19,6 +19,7 @@ app.use(serveFavicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(
   session({
@@ -27,22 +28,22 @@ app.use(
     saveUninitialized: true
   })
 );
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3001'] // <=URL of React app (it will be running on port 3000)
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(
-  cors({
-    credentials: true,
-    origin: ['http://localhost:3000'] // <=URL of React app (it will be running on port 3000)
-  })
-);
 
 // ROUTES MIDDLEWARE STARTS HERE:
-const stocksRoutes = require('./routes/markets/stocks-routes');
-app.use('/api', stocksRoutes);
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
+const stocksRoutes = require('./routes/markets/stocks-routes');
+app.use('/api', stocksRoutes);
 const assetRoutes = require('./routes/asset-route');
 app.use('/api', assetRoutes);
 app.use('/', baseRouter);
