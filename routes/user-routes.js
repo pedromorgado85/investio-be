@@ -3,16 +3,14 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 const User = require('../models/user');
-const InvestorProfile = require('../models/investorProfile'); // <== !!!
+
 
 // POST route => to create a new user
 router.post('/users', (req, res, next) => {
-  const { name, email, password, investorProfile, portefolio } = req.body;
+  const { name, email, password } = req.body;
   User.create({
     name,
     email,
-    investorProfile,
-    portefolio,
     password
   })
     .then((response) => {

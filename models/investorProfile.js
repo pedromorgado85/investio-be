@@ -6,20 +6,28 @@ const investorProfile = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  age: {
+  ageGroup: {
     type: Number,
     trim: true,
     required: true
   },
   education: {
-    type: String,
+    type: Number,
     required: true
   },
   experience: {
     type: Number,
+    required: true,
+  },
+  profession: {
+    type: Number,
+    required: true,
+  },
+  risk: {
+    type: Number,
     required: true
   },
-  riskAppetite: {
+  investment: {
     type: Number,
     required: true
   }

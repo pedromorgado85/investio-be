@@ -19,6 +19,7 @@ passport.deserializeUser((userIdFromSession, cb) => {
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
+  passwordField: 'password',
   session: true
 },
   (email, password, next) => {

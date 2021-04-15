@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const InvestorProfile = require('../models/investorProfile');
+const User = require('../models/user');
 
 router.get(
   '/users/:userId/investorProfile/:investorProfileID',
@@ -17,15 +18,19 @@ router.get(
 );
 
 router.post('/investorProfile', (req, res, next) => {
+  console.log("BODY", req.body)
+  console.log("SESSION", req.session)
   InvestorProfile.create({
-    age: req.body.age,
-    education: req.body.education,
-    experience: req.body.experience,
-    riskAppetite: req.body.riskAppetite,
-    user: req.body.userID
+    ageGroup: parseInt(req.body.ageGroup),
+    education: parseInt(req.body.education),
+    profession: parseInt(req.body.profession),
+    experience: parseInt(req.body.experience),
+    risk: parseInt(req.body.risk),
+    investment: parseInt(req.body.investment),
+    // user: req.session.passport.user,
   })
     .then((response) => {
-      return InvestorProfile.findByIdAndUpdate(req.body.investorProfileID, {
+      return User.findByIdAndUpdate(req.body.userID, {
         $push: { investorProfile: response._id }
       });
     })

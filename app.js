@@ -42,10 +42,16 @@ app.use(passport.session());
 // ROUTES MIDDLEWARE STARTS HERE:
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
+
+const investorProfileRoutes = require('./routes/investorProfile-routes');
+app.use('/api', investorProfileRoutes);
+
 const stocksRoutes = require('./routes/markets/stocks-routes');
 app.use('/api', stocksRoutes);
+
 const assetRoutes = require('./routes/asset-route');
 app.use('/api', assetRoutes);
+
 app.use('/', baseRouter);
 
 // Catch missing routes and forward to error handler
