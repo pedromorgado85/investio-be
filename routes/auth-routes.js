@@ -42,7 +42,7 @@ authRoutes.post('/signup', (req, res, next) => {
       name: name,
       email: email,
       password: hashPass
-    });
+    }).populate('investorProfiles assets');
 
     aNewUser.save((err) => {
       if (err) {

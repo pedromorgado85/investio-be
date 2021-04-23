@@ -30,6 +30,11 @@ const investorProfile = new Schema({
   investment: {
     type: Number,
     required: true
+  },
+  result: {
+    type: String,
+    enum: ['conservative', 'moderate', 'dynamic'],
+    default: 'moderate'
   }
 });
 

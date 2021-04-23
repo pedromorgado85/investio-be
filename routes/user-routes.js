@@ -11,8 +11,9 @@ router.post('/users', (req, res, next) => {
   User.create({
     name,
     email,
-    password
+    password,
   })
+    .populate('investorProfiles assets')
     .then((response) => {
       res.json(response);
     })
@@ -22,14 +23,15 @@ router.post('/users', (req, res, next) => {
 });
 
 router.get('/users', (req, res, next) => {
-    User.find()
-        .populate('assets')
-        .then((allTheUsers) => {
-            res.json(allTheUsers);
-        })
-        .catch((err) => {
-            res.json(err);
-        });
+  User.find()
+    .populate('investorProfiles assets')
+    .then((allTheUsers) => {
+      res.json(allTheUsers);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
 router.get('/users/:id', (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -37,7 +39,7 @@ router.get('/users/:id', (req, res, next) => {
     return;
   }
   User.findById(req.params.id)
-    .populate('asset')
+    .populate('investorProfiles assets')
     .then((project) => {
       res.status(200).json(project);
     })
@@ -52,12 +54,13 @@ router.put('/users/:id', (req, res, next) => {
     return;
   }
 
-  User.findByIdAndUpdate(req.params.id, req.body)
+  User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(() => {
       res.json({
         message: `User with ${req.params.id} is updated successfully.`
       });
     })
+    .populate('investorProfiles assets')
     .catch((error) => {
       res.json(error);
     });

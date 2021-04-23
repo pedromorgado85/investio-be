@@ -17,7 +17,11 @@ const user = new Schema({
     type: String,
     trim: true
   },
-  investorProfile: [{ type: Schema.Types.ObjectId, ref: 'InvestorProfile' }],
+  // image: {
+  //   type: Image,
+  //   required: false,
+  // },
+  investorProfiles: [{ type: Schema.Types.ObjectId, ref: 'InvestorProfile' }],
   portefolio: [{ type: Schema.Types.ObjectId, ref: 'Asset' }]
 });
 

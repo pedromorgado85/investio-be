@@ -10,12 +10,18 @@ const asset = new Schema({
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    enum: ['bonds', 'cryptoCurrency', 'forex', 'stocks'],
+    required: true
+  },
   amount: {
     type: Number,
     required: true
   },
   unit: {
-    type: Number,
+    type: String,
+    enum: ['usd', 'eur'],
     required: true
   }
 });

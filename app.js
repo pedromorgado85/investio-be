@@ -7,6 +7,7 @@ const logger = require('morgan');
 const serveFavicon = require('serve-favicon');
 const baseRouter = require('./routes/index');
 const cors = require('cors');
+const MongoStore = require('connect-mongo');
 
 require('./configs/passport');
 
@@ -21,17 +22,27 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const options = {
+  mongoUrl: 'mongodb://localhost/investio-be',
+  ttl: 14 * 24 * 60 * 60
+};
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
+    store: MongoStore.create(options),
     resave: true,
-    saveUninitialized: true
-  })
+    saveUninitialized: true,
+    cookie: { maxAge: 12000000 },
+    // ttl: 60 * 60 * 24, // 60sec * 60min * 24h => 1 day
+  }),
 );
+
 app.use(
   cors({
     credentials: true,
     origin: ['http://localhost:3001'] // <=URL of React app (it will be running on port 3000)
+
   })
 );
 

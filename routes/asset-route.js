@@ -4,7 +4,6 @@ const router = express.Router();
 
 const Asset = require('../models/asset');
 const User = require('../models/user');
-const InvestorProfile = require('../models/investorProfile');
 
 router.get('/users/:userId/assets/:assetId', (req, res, next) => {
   Asset.findById(req.params.assetId)
@@ -17,24 +16,24 @@ router.get('/users/:userId/assets/:assetId', (req, res, next) => {
 });
 
 router.post('/assets', (req, res, next) => {
-  Asset.create({
+  const asset = new Asset({
     name: req.body.title,
     amount: req.body.amount,
     unit: req.body.unit,
-    user: req.body.userID
+    user: req.body.userID,
   })
-    .then((response) => {
-      return Asset.findByIdAndUpdate(req.body.assetID, {
-        $push: { asset: response._id }
+  asset.save().then((asset) => {
+    User.findByIdAndUpdate(req.session.passport.user, { $push: { portefolio: asset._id } }, { new: true })
+      .populate('investorProfiles portefolio')
+      .then((updatedUser) => {
+        res.json(updatedUser);
+      }).catch((error) => {
+        res.json(error);
       });
-    })
-    .then((theResponse) => {
-      res.json(theResponse);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
+  }
+  )
 });
+
 router.put('/assets/:id', (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
