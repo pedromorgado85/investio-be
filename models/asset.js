@@ -21,7 +21,7 @@ const asset = new Schema({
   },
   unit: {
     type: String,
-    enum: ['usd', 'eur'],
+    enum: ['USD', 'EUR'],
     required: true
   }
 });

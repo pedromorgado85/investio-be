@@ -14,7 +14,7 @@ passport.deserializeUser((userIdFromSession, cb) => {
       return;
     }
     cb(null, userDocument);
-  }).populate('investorProfiles assets');
+  }).populate('investorProfiles portefolio');
 });
 
 passport.use(new LocalStrategy({

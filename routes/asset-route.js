@@ -17,7 +17,8 @@ router.get('/users/:userId/assets/:assetId', (req, res, next) => {
 
 router.post('/assets', (req, res, next) => {
   const asset = new Asset({
-    name: req.body.title,
+    name: req.body.name,
+    type: req.body.type,
     amount: req.body.amount,
     unit: req.body.unit,
     user: req.body.userID,
