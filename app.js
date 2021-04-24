@@ -1,3 +1,8 @@
+require('dotenv').config();
+require('./configs/passport');
+
+// const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
@@ -9,7 +14,6 @@ const baseRouter = require('./routes/index');
 const cors = require('cors');
 const MongoStore = require('connect-mongo');
 
-require('./configs/passport');
 
 const app = express();
 
@@ -23,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const options = {
-  mongoUrl: 'mongodb://localhost/investio-be',
+  mongoUrl: process.env.MONGODB_URI,
   ttl: 14 * 24 * 60 * 60
 };
 
@@ -32,8 +36,15 @@ app.use(
     secret: process.env.SESSION_SECRET,
     store: MongoStore.create(options),
     resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 12000000 },
+    saveUninitialized: false,
+    proxy: true,
+    cookie: {
+      maxAge: 15 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : false,
+      secure: process.env.NODE_ENV === 'production'
+    }
+
     // ttl: 60 * 60 * 24, // 60sec * 60min * 24h => 1 day
   }),
 );
@@ -41,7 +52,7 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:3001'] // <=URL of React app (it will be running on port 3000)
+    origin: (process.env.FE_POINT || '').split(',') // <=URL of React app (it will be running on port 3000)
 
   })
 );
