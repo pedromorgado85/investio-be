@@ -24,6 +24,13 @@ app.use(serveFavicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin: (process.env.FE_POINT || '').split(',') // <=URL of React app (it will be running on port 3000)
+
+  })
+);
 app.use(express.json());
 
 const options = {
@@ -49,13 +56,6 @@ app.use(
   }),
 );
 
-app.use(
-  cors({
-    credentials: true,
-    origin: (process.env.FE_POINT || '').split(',') // <=URL of React app (it will be running on port 3000)
-
-  })
-);
 
 app.use(passport.initialize());
 app.use(passport.session());
