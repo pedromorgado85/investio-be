@@ -34,8 +34,10 @@ const investorProfile = new Schema({
   result: {
     type: String,
     enum: ['conservative', 'moderate', 'dynamic'],
-    default: 'moderate'
+    default: 'moderate',
   }
-});
+},
+  { timestamps: true },
+);
 
 module.exports = mongoose.model('InvestorProfile', investorProfile);

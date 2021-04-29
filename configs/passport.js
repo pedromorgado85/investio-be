@@ -38,6 +38,6 @@ passport.use(new LocalStrategy({
       }
 
       next(null, foundUser);
-    });
+    }).populate('investorProfiles portefolio');
   })
 );

@@ -51,8 +51,6 @@ app.use(
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : false,
       secure: process.env.NODE_ENV === 'production'
     }
-
-    // ttl: 60 * 60 * 24, // 60sec * 60min * 24h => 1 day
   }),
 );
 
