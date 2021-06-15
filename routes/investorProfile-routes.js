@@ -3,24 +3,28 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const InvestorProfile = require('../models/investorProfile');
 const User = require('../models/user');
-const investorProfileCalculator = require('../utils/investorProfileCalc')
+const investorProfileCalculator = require('../utils/investorProfileCalc');
 
-router.get(
-  '/users/:userId/investorProfile/:investorProfileID',
-  (req, res, next) => {
-    InvestorProfile.findById(req.params.investorProfileID)
-      .then((investorProfile) => {
-        res.json(investorProfile);
-      })
-      .catch((error) => {
-        res.json(error);
-      });
-  }
-);
+router.get('/users/:userId/investorProfile/:investorProfileID', (req, res) => {
+  InvestorProfile.findById(req.params.investorProfileID)
+    .then((investorProfile) => {
+      res.json(investorProfile);
+    })
+    .catch((error) => {
+      res.json(error);
+    });
+});
 
-router.post('/investorProfile', (req, res, next) => {
-  const ipCalcul = investorProfileCalculator(req.body.ageGroup, req.body.education, req.body.profession, req.body.experience, req.body.risk, req.body.investment)
-  console.log(ipCalcul)
+router.post('/investorProfile', (req, res) => {
+  const ipCalcul = investorProfileCalculator(
+    req.body.ageGroup,
+    req.body.education,
+    req.body.profession,
+    req.body.experience,
+    req.body.risk,
+    req.body.investment
+  );
+  console.log(ipCalcul);
   const profile = new InvestorProfile({
     ageGroup: parseInt(req.body.ageGroup),
     education: parseInt(req.body.education),
@@ -29,22 +33,26 @@ router.post('/investorProfile', (req, res, next) => {
     risk: parseInt(req.body.risk),
     investment: parseInt(req.body.investment),
     user: req.session.passport.user,
-    result: ipCalcul,
-  })
-  console.log(profile)
+    result: ipCalcul
+  });
+  console.log(profile);
   profile.save().then((investorProfile) => {
-    User.findByIdAndUpdate(req.session.passport.user, { $push: { investorProfiles: investorProfile._id } }, { new: true })
+    User.findByIdAndUpdate(
+      req.session.passport.user,
+      { $push: { investorProfiles: investorProfile._id } },
+      { new: true }
+    )
       .populate('investorProfiles portefolio')
       .then((updatedUser) => {
         res.json(updatedUser);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         res.json(error);
       });
-  }
-  )
+  });
 });
 
-router.put('/investorProfile/:id', (req, res, next) => {
+router.put('/investorProfile/:id', (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
@@ -60,7 +68,7 @@ router.put('/investorProfile/:id', (req, res, next) => {
       res.json(err);
     });
 });
-router.delete('/investorProfile/:id', (req, res, next) => {
+router.delete('/investorProfile/:id', (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
